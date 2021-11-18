@@ -42,11 +42,11 @@ namespace LabEx
         {
             try
             {
-
+                TextBoxExpression.Text = Calculator.Evaluate(TextBoxExpression.Text).ToString();
             }
             catch
             {
-
+                MessageBox.Show("Error");
             }
         }
     }
