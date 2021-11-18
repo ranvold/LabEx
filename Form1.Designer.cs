@@ -1,7 +1,7 @@
 ﻿
 namespace LabEx
 {
-    partial class Form1
+    partial class FormEx
     {
         /// <summary>
         ///  Required designer variable.
@@ -29,7 +29,7 @@ namespace LabEx
         /// </summary>
         private void InitializeComponent()
         {
-            this.DataGridView = new System.Windows.Forms.DataGridView();
+            this.DataGridViewEx = new System.Windows.Forms.DataGridView();
             this.ButtonSave = new System.Windows.Forms.Button();
             this.ButtonOpen = new System.Windows.Forms.Button();
             this.LabelRows = new System.Windows.Forms.Label();
@@ -40,17 +40,23 @@ namespace LabEx
             this.ButtonDelColumn = new System.Windows.Forms.Button();
             this.TextBoxExpression = new System.Windows.Forms.TextBox();
             this.ButtonCalcExp = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEx)).BeginInit();
             this.SuspendLayout();
             // 
-            // DataGridView
+            // DataGridViewEx
             // 
-            this.DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataGridView.Location = new System.Drawing.Point(-3, 41);
-            this.DataGridView.Name = "DataGridView";
-            this.DataGridView.RowTemplate.Height = 25;
-            this.DataGridView.Size = new System.Drawing.Size(843, 411);
-            this.DataGridView.TabIndex = 0;
+            this.DataGridViewEx.AllowUserToAddRows = false;
+            this.DataGridViewEx.AllowUserToDeleteRows = false;
+            this.DataGridViewEx.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
+            this.DataGridViewEx.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DataGridViewEx.Location = new System.Drawing.Point(-3, 41);
+            this.DataGridViewEx.Name = "DataGridViewEx";
+            this.DataGridViewEx.ReadOnly = true;
+            this.DataGridViewEx.RowHeadersWidth = 60;
+            this.DataGridViewEx.RowTemplate.Height = 25;
+            this.DataGridViewEx.Size = new System.Drawing.Size(843, 411);
+            this.DataGridViewEx.TabIndex = 0;
+            this.DataGridViewEx.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewEx_CellEnter);
             // 
             // ButtonSave
             // 
@@ -139,8 +145,9 @@ namespace LabEx
             this.ButtonCalcExp.TabIndex = 10;
             this.ButtonCalcExp.Text = "Calculate";
             this.ButtonCalcExp.UseVisualStyleBackColor = true;
+            this.ButtonCalcExp.Click += new System.EventHandler(this.ButtonCalcExp_Click);
             // 
-            // Form1
+            // FormEx
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -155,13 +162,14 @@ namespace LabEx
             this.Controls.Add(this.LabelRows);
             this.Controls.Add(this.ButtonOpen);
             this.Controls.Add(this.ButtonSave);
-            this.Controls.Add(this.DataGridView);
+            this.Controls.Add(this.DataGridViewEx);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "FormEx";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LabEx";
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridView)).EndInit();
+            this.Load += new System.EventHandler(this.FormEx_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEx)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -169,7 +177,7 @@ namespace LabEx
 
         #endregion
 
-        private System.Windows.Forms.DataGridView DataGridView;
+        private System.Windows.Forms.DataGridView DataGridViewEx;
         private System.Windows.Forms.Button ButtonSave;
         private System.Windows.Forms.Button ButtonOpen;
         private System.Windows.Forms.Label LabelRows;
