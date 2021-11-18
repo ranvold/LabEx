@@ -14,7 +14,7 @@ expression :
 	| operatorToken=(NMAX | NMIN) LPAREN expression (DOT expression)* RPAREN #NmaxNminExpr
 	| operatorToken=(INC | DEC) LPAREN expression RPAREN #IncDecExpr
 	| NUMBER #NumberExpr
-	//| IDENTIFIER #IdentifierExpr
+	| IDENTIFIER #IdentifierExpr
 	; 
 
 /*
@@ -22,9 +22,8 @@ expression :
  */
 
 NUMBER : INT ('.' INT)?; 
-//IDENTIFIER : [a-zA-Z]+[1-9][0-9]+;
-
 INT : ('0'..'9')+;
+IDENTIFIER : ('A'..'Z')+('0'..'9')+;
 
 EXPONENT : '^';
 MULTIPLY : '*';

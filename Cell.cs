@@ -14,6 +14,8 @@ namespace LabEx
         private string _expression;
         private int _columnNumber;
         private int _rowNumber;
+        private List<Cell> _cellDepends = new();
+        private List<Cell> _dependentCells = new();
 
         public Cell() { }
         public Cell(int columnNumber, int rowNumber)
@@ -24,6 +26,7 @@ namespace LabEx
             _cellValue = 0;
             _expression = "";
         }
+
         public int ColumnNumber
         {
             get { return _columnNumber; }
@@ -49,7 +52,16 @@ namespace LabEx
             get { return _expression; }
             set { _expression = value; }
         }
-
+        public List<Cell> CellDepends
+        {
+            get { return _cellDepends; }
+            set { _cellDepends = value; }
+        }
+        public List<Cell> DependentCells
+        {
+            get { return _dependentCells; }
+            set { _dependentCells = value; }
+        }
         public static string BuildNameCell(int column, int row)
         {
             return Converter.To26System(column) + row.ToString();

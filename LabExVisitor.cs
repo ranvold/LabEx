@@ -10,9 +10,6 @@ namespace LabEx
 {
     class LabExVisitor : LabExBaseVisitor<double>
     {
-        //таблиця ідентифікаторів (тут для прикладу)
-        //в лабораторній роботі заміните на свою!!!!
-        Dictionary<string, double> tableIdentifier = new Dictionary<string, double>();
 
         public override double VisitCompileUnit(LabExParser.CompileUnitContext context)
         {
@@ -43,7 +40,6 @@ namespace LabEx
             }
             else if (context.operatorToken.Type == LabExLexer.NMIN)
             {
-                double min = Visit(context.expression(0)); //Are we need it?
                 foreach (var expr in expressions)
                 {
                     if (Visit(expr) <= max_min)
@@ -51,7 +47,6 @@ namespace LabEx
                         max_min = Visit(expr);
                     }
                 }
-
             }
             return max_min;
         }
@@ -71,20 +66,21 @@ namespace LabEx
             }
         }
         //IdentifierExpr
-        //public override double VisitIdentifierExpr(LabExParser.IdentifierExprContext context)
-        //{
-        //    var result = context.GetText();
-        //    double value;
-        //    //видобути значення змінної з таблиці
-        //    if (tableIdentifier.TryGetValue(result.ToString(), out value))
-        //    {
-        //        return value;
-        //    }
-        //    else
-        //    {
-        //        return 0.0;
-        //    }
-        //}
+        public override double VisitIdentifierExpr(LabExParser.IdentifierExprContext context)
+        {
+            var result = context.GetText();
+            //видобути значення змінної з таблиці
+            if (Table.Database.TryGetValue(result.ToString(), out Cell cell))
+            {
+                cell.DependentCells.Add(Table.CurrCell());
+                Table.CurrCell().CellDepends.Add(cell);
+                return cell.CellValue;
+            }
+            else
+            {
+                return 0.0;
+            }
+        }
 
         public override double VisitParenthesizedExpr(LabExParser.ParenthesizedExprContext context)
         {

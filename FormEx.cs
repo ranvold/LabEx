@@ -40,9 +40,12 @@ namespace LabEx
 
         private void ButtonCalcExp_Click(object sender, EventArgs e)
         {
+            Cell currCell = Table.CurrCell();
             try
             {
-                TextBoxExpression.Text = Calculator.Evaluate(TextBoxExpression.Text).ToString();
+                Table.Database[currCell.Name].CellValue = Calculator.Evaluate(TextBoxExpression.Text);
+                Table.Database[currCell.Name].Expression = TextBoxExpression.Text;
+                DataGridViewEx[currCell.ColumnNumber, currCell.RowNumber].Value = Table.Database[currCell.Name].CellValue.ToString();
             }
             catch
             {

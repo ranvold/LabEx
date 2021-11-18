@@ -10,7 +10,7 @@ namespace LabEx
     internal static class Table
     {
         private const int DefaultRows = 15;
-        private const int DefaultColumns = 8;
+        private const int DefaultColumns = 30;
         private static int _rows = 0;
         private static int _columns = 0;
         private static DataGridView _dataGridViewEx;
@@ -50,6 +50,13 @@ namespace LabEx
                     _database.Add(cell.Name, cell);
                 }
             }
+        }
+        public static Cell CurrCell()
+        {
+            int currRow = _dataGridViewEx.CurrentCell.RowIndex;
+            int currColumn = _dataGridViewEx.CurrentCell.ColumnIndex;
+            string currName = Cell.BuildNameCell(currColumn, currRow);
+            return _database[currName];
         }
     }
 }
