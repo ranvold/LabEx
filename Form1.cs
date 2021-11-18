@@ -12,11 +12,10 @@ namespace LabEx
 {
     public partial class FormEx : Form
     {
-        private static Table _table;
         public FormEx()
         {
             InitializeComponent();
-            _table = new Table(DataGridViewEx);
+            Table.Init(DataGridViewEx);
         }
 
         private void FormEx_Load(object sender, EventArgs e)

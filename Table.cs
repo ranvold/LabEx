@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace LabEx
 {
-    internal class Table
+    internal static class Table
     {
         private const int DefaultRows = 15;
         private const int DefaultColumns = 8;
@@ -22,7 +22,7 @@ namespace LabEx
             set { _database = value; }
         }
 
-        public Table(DataGridView dataGridViewEx)
+        public static void Init(DataGridView dataGridViewEx)
         {
             _dataGridViewEx = dataGridViewEx;
             for (int i = 0; i < DefaultColumns; i++)
