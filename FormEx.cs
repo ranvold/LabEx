@@ -38,19 +38,33 @@ namespace LabEx
             }
         }
 
-        private void ButtonCalcExp_Click(object sender, EventArgs e)
+        private void ButtonEnterExp_Click(object sender, EventArgs e)
         {
-            Cell currCell = Table.CurrCell();
+            CalcExpr(Table.CurrCell());
+        }
+        public void CalcExpr(string currCell)
+        {
+            Table.UpdateDependencies(currCell);
+            int currColumn = Table.Database[currCell].ColumnNumber;
+            int currRow = Table.Database[currCell].RowNumber;
             try
             {
-                Table.Database[currCell.Name].CellValue = Calculator.Evaluate(TextBoxExpression.Text);
-                Table.Database[currCell.Name].Expression = TextBoxExpression.Text;
-                DataGridViewEx[currCell.ColumnNumber, currCell.RowNumber].Value = Table.Database[currCell.Name].CellValue.ToString();
+                Table.Database[currCell].CellValue = Calculator.Evaluate(TextBoxExpression.Text);
+                Table.Database[currCell].Expression = TextBoxExpression.Text;
+                DataGridViewEx[currColumn, currRow].Value = Table.Database[currCell].CellValue.ToString();
+                if (Table.Database[currCell].DependentCells.Count != 0)
+                {
+                    Table.RefreshCells(currCell);
+                }
+
+                DataGridViewEx.CurrentCell = DataGridViewEx[currColumn, currRow + 1];
             }
             catch
             {
                 MessageBox.Show("Error");
             }
+
         }
+
     }
 }

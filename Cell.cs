@@ -7,15 +7,15 @@ using System.Windows.Forms;
 
 namespace LabEx
 {
-    internal class Cell : DataGridViewTextBoxCell
+    public class Cell : DataGridViewTextBoxCell
     {
         private double _cellValue;
         private string _name;
         private string _expression;
         private int _columnNumber;
         private int _rowNumber;
-        private List<Cell> _cellDepends = new();
-        private List<Cell> _dependentCells = new();
+        private List<string> _cellDepends = new();
+        private List<string> _dependentCells = new();
 
         public Cell() { }
         public Cell(int columnNumber, int rowNumber)
@@ -52,12 +52,12 @@ namespace LabEx
             get { return _expression; }
             set { _expression = value; }
         }
-        public List<Cell> CellDepends
+        public List<string> CellDepends
         {
             get { return _cellDepends; }
             set { _cellDepends = value; }
         }
-        public List<Cell> DependentCells
+        public List<string> DependentCells
         {
             get { return _dependentCells; }
             set { _dependentCells = value; }

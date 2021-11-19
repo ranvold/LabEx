@@ -72,8 +72,9 @@ namespace LabEx
             //видобути значення змінної з таблиці
             if (Table.Database.TryGetValue(result.ToString(), out Cell cell))
             {
-                cell.DependentCells.Add(Table.CurrCell());
-                Table.CurrCell().CellDepends.Add(cell);
+                string currCell = Table.CurrCell();
+                Table.Database[currCell].CellDepends.Add(cell.Name);
+                cell.DependentCells.Add(currCell);
                 return cell.CellValue;
             }
             else
@@ -93,7 +94,7 @@ namespace LabEx
             var right = WalkRight(context);
 
             Debug.WriteLine("{0} ^ {1}", left, right);
-            return System.Math.Pow(left, right);
+            return Math.Pow(left, right);
         }
 
         public override double VisitAdditiveExpr(LabExParser.AdditiveExprContext context)

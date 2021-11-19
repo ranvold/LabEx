@@ -10,7 +10,7 @@ namespace LabEx
     internal static class Table
     {
         private const int DefaultRows = 15;
-        private const int DefaultColumns = 30;
+        private const int DefaultColumns = 8;
         private static int _rows = 0;
         private static int _columns = 0;
         private static DataGridView _dataGridViewEx;
@@ -51,12 +51,43 @@ namespace LabEx
                 }
             }
         }
-        public static Cell CurrCell()
+        public static string CurrCell()
         {
             int currRow = _dataGridViewEx.CurrentCell.RowIndex;
             int currColumn = _dataGridViewEx.CurrentCell.ColumnIndex;
-            string currName = Cell.BuildNameCell(currColumn, currRow);
-            return _database[currName];
+            return Cell.BuildNameCell(currColumn, currRow);
+        }
+        public static void UpdateDependencies(string currCell)
+        {
+            if (_database[currCell].CellDepends.Count != 0)
+            {
+                foreach (var cellDepends in _database[currCell].CellDepends)
+                {
+                    foreach (var dependentCells in _database[cellDepends].DependentCells)
+                    {
+                        if (dependentCells == currCell)
+                        {
+                            _database[cellDepends].DependentCells.Remove(currCell);
+                        }
+                        break;
+                    }
+                }
+                _database[currCell].CellDepends.Clear();
+            }
+        }
+        public static void RefreshCells(string currCell)
+        {
+            foreach (string item in _database[currCell].DependentCells)
+            {
+                int currColumn = _database[item].ColumnNumber;
+                int currRow = _database[item].RowNumber;
+                _dataGridViewEx.CurrentCell = _dataGridViewEx[currColumn, currRow];
+                UpdateDependencies(item);
+                _database[item].CellValue = Calculator.Evaluate(_database[item].Expression);
+                _dataGridViewEx[currColumn, currRow].Value = _database[item].CellValue.ToString();
+                RefreshCells(item);
+                break;
+            }
         }
     }
 }

@@ -39,7 +39,7 @@ namespace LabEx
             this.ButtonAddColumn = new System.Windows.Forms.Button();
             this.ButtonDelColumn = new System.Windows.Forms.Button();
             this.TextBoxExpression = new System.Windows.Forms.TextBox();
-            this.ButtonCalcExp = new System.Windows.Forms.Button();
+            this.ButtonEnterExp = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEx)).BeginInit();
             this.SuspendLayout();
             // 
@@ -137,22 +137,22 @@ namespace LabEx
             this.TextBoxExpression.Size = new System.Drawing.Size(203, 23);
             this.TextBoxExpression.TabIndex = 9;
             // 
-            // ButtonCalcExp
+            // ButtonEnterExp
             // 
-            this.ButtonCalcExp.Location = new System.Drawing.Point(751, 7);
-            this.ButtonCalcExp.Name = "ButtonCalcExp";
-            this.ButtonCalcExp.Size = new System.Drawing.Size(75, 28);
-            this.ButtonCalcExp.TabIndex = 10;
-            this.ButtonCalcExp.Text = "Calculate";
-            this.ButtonCalcExp.UseVisualStyleBackColor = true;
-            this.ButtonCalcExp.Click += new System.EventHandler(this.ButtonCalcExp_Click);
+            this.ButtonEnterExp.Location = new System.Drawing.Point(751, 7);
+            this.ButtonEnterExp.Name = "ButtonEnterExp";
+            this.ButtonEnterExp.Size = new System.Drawing.Size(75, 28);
+            this.ButtonEnterExp.TabIndex = 10;
+            this.ButtonEnterExp.Text = "Enter";
+            this.ButtonEnterExp.UseVisualStyleBackColor = true;
+            this.ButtonEnterExp.Click += new System.EventHandler(this.ButtonEnterExp_Click);
             // 
             // FormEx
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(838, 450);
-            this.Controls.Add(this.ButtonCalcExp);
+            this.Controls.Add(this.ButtonEnterExp);
             this.Controls.Add(this.TextBoxExpression);
             this.Controls.Add(this.ButtonDelColumn);
             this.Controls.Add(this.ButtonAddColumn);
@@ -187,7 +187,7 @@ namespace LabEx
         private System.Windows.Forms.Button ButtonAddColumn;
         private System.Windows.Forms.Button ButtonDelColumn;
         private System.Windows.Forms.TextBox TextBoxExpression;
-        private System.Windows.Forms.Button ButtonCalcExp;
+        private System.Windows.Forms.Button ButtonEnterExp;
     }
 }
 
