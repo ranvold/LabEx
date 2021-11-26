@@ -24,6 +24,7 @@ namespace LabEx
             return result;
         }
 
+        //NmaxNminExpr
         public override double VisitNmaxNminExpr(LabExParser.NmaxNminExprContext context)
         {
             var expressions = context.expression();
@@ -51,6 +52,7 @@ namespace LabEx
             return max_min;
         }
 
+        //IncDecExpr
         public override double VisitIncDecExpr([NotNull] LabExParser.IncDecExprContext context)
         {
             var number = WalkLeft(context);
@@ -69,12 +71,15 @@ namespace LabEx
         public override double VisitIdentifierExpr(LabExParser.IdentifierExprContext context)
         {
             var result = context.GetText();
-            //видобути значення змінної з таблиці
+            //Extract the value of the variable from the table
             if (Table.Database.TryGetValue(result.ToString(), out Cell cell))
             {
+                //**************************
+                //Set cell dependencies
                 string currCell = Table.CurrCell();
                 Table.Database[currCell].CellDepends.Add(cell.Name);
                 cell.DependentCells.Add(currCell);
+                //**************************
                 return cell.CellValue;
             }
             else

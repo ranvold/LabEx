@@ -56,8 +56,6 @@ namespace LabEx
                 {
                     Table.RefreshCells(currCell);
                 }
-
-                DataGridViewEx.CurrentCell = DataGridViewEx[currColumn, currRow + 1];
             }
             catch
             {
@@ -66,5 +64,35 @@ namespace LabEx
 
         }
 
+        private void TextBoxExpression_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                CalcExpr(Table.CurrCell());
+
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+            }
+        }
+
+        private void ButtonAddRow_Click(object sender, EventArgs e)
+        {
+            Table.AddRow();
+        }
+
+        private void ButtonAddColumn_Click(object sender, EventArgs e)
+        {
+            Table.AddColumn();
+        }
+
+        private void ButtonDelRow_Click(object sender, EventArgs e)
+        {
+            Table.DelRow();
+        }
+
+        private void ButtonDelColumn_Click(object sender, EventArgs e)
+        {
+            Table.DelColumn();
+        }
     }
 }

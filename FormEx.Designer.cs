@@ -93,6 +93,7 @@ namespace LabEx
             this.ButtonAddRow.TabIndex = 4;
             this.ButtonAddRow.Text = "+";
             this.ButtonAddRow.UseVisualStyleBackColor = true;
+            this.ButtonAddRow.Click += new System.EventHandler(this.ButtonAddRow_Click);
             // 
             // ButtonDelRow
             // 
@@ -102,6 +103,7 @@ namespace LabEx
             this.ButtonDelRow.TabIndex = 5;
             this.ButtonDelRow.Text = "-";
             this.ButtonDelRow.UseVisualStyleBackColor = true;
+            this.ButtonDelRow.Click += new System.EventHandler(this.ButtonDelRow_Click);
             // 
             // LabelColumns
             // 
@@ -120,6 +122,7 @@ namespace LabEx
             this.ButtonAddColumn.TabIndex = 7;
             this.ButtonAddColumn.Text = "+";
             this.ButtonAddColumn.UseVisualStyleBackColor = true;
+            this.ButtonAddColumn.Click += new System.EventHandler(this.ButtonAddColumn_Click);
             // 
             // ButtonDelColumn
             // 
@@ -129,6 +132,7 @@ namespace LabEx
             this.ButtonDelColumn.TabIndex = 8;
             this.ButtonDelColumn.Text = "-";
             this.ButtonDelColumn.UseVisualStyleBackColor = true;
+            this.ButtonDelColumn.Click += new System.EventHandler(this.ButtonDelColumn_Click);
             // 
             // TextBoxExpression
             // 
@@ -136,6 +140,7 @@ namespace LabEx
             this.TextBoxExpression.Name = "TextBoxExpression";
             this.TextBoxExpression.Size = new System.Drawing.Size(203, 23);
             this.TextBoxExpression.TabIndex = 9;
+            this.TextBoxExpression.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxExpression_KeyDown);
             // 
             // ButtonEnterExp
             // 
