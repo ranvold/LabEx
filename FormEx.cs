@@ -16,7 +16,7 @@ namespace LabEx
 
 
         //The main program method for working with expressions.
-        private void CalcExpr()
+        private void CalcExprInBox()
         {
             int currColumn = DataGridViewEx.CurrentCell.ColumnIndex;
             int currRow = DataGridViewEx.CurrentCell.RowIndex;
@@ -87,14 +87,14 @@ namespace LabEx
 
         private void ButtonEnterExp_Click(object sender, EventArgs e)
         {
-            CalcExpr();
+            CalcExprInBox();
         }
         
         private void TextBoxExpression_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                CalcExpr();
+                CalcExprInBox();
 
                 e.SuppressKeyPress = true;
                 e.Handled = true;
