@@ -20,7 +20,7 @@ namespace LabEx
         public Cell() { }
         public Cell(int columnNumber, int rowNumber)
         {
-            _name = BuildNameCell(columnNumber, rowNumber);
+            _name = BuildCellName(columnNumber, rowNumber);
             _columnNumber = columnNumber;
             _rowNumber = rowNumber;
             _cellValue = 0;
@@ -62,10 +62,11 @@ namespace LabEx
             get { return _dependentCells; }
             set { _dependentCells = value; }
         }
-        public static string BuildNameCell(int column, int row)
+        public static string BuildCellName(int column, int row)
         {
             return Converter.To26System(column) + row.ToString();
         }
+        
         
     }
 }

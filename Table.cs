@@ -1,59 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LabEx
 {
     internal static class Table
     {
-        private const int DefaultRows = 15;
-        private const int DefaultColumns = 8;
         private static int _rows = 0;
         private static int _columns = 0;
-        private static DataGridView _dataGridViewEx;
+        private static string _cellForDependencies;
         private static Dictionary<string, Cell> _database = new();
 
-        public static DataGridView DataGridViewEx
-        {
-            get { return _dataGridViewEx; }
-            set { _dataGridViewEx = value; }
-        }
+
         public static Dictionary<string, Cell> Database
         {
             get { return _database; }
             set { _database = value; }
         }
+
         public static int Rows
         {
             get { return _rows; }
             set { _rows = value; }
         }
+
         public static int Columns
         { 
             get { return _columns; }
             set { _columns = value; }
         }
 
-        public static void Init(DataGridView dataGridViewEx)
+
+        //Default table initialization.
+        public static void InitTable(int columns, int rows, DataGridView dataGridViewEx)
         {
-            DataGridViewEx = dataGridViewEx;
-            for (int i = 0; i < DefaultColumns; i++)
+            for (int i = 0; i < columns; i++)
             {
                 DataGridViewColumn defColumn = new();
                 defColumn.HeaderText = Converter.To26System(i);
                 defColumn.Name = defColumn.HeaderText;
                 defColumn.CellTemplate = new Cell();
-                DataGridViewEx.Columns.Add(defColumn);
+                dataGridViewEx.Columns.Add(defColumn);
                 ++Columns;
             }
-            for (int i = 0; i < DefaultRows; i++)
+            for (int i = 0; i < rows; i++)
             {
                 DataGridViewRow defRow = new();
                 defRow.HeaderCell.Value = i.ToString();
-                DataGridViewEx.Rows.Add(defRow);
+                dataGridViewEx.Rows.Add(defRow);
                 ++Rows;
             }
 
@@ -66,14 +60,11 @@ namespace LabEx
                 }
             }
         }
-        public static string CurrCell()
-        {
-            int currRow = DataGridViewEx.CurrentCell.RowIndex;
-            int currColumn = DataGridViewEx.CurrentCell.ColumnIndex;
-            return Cell.BuildNameCell(currColumn, currRow);
-        }
+
+        //When using cells in the expression, we update the dependencies.
         public static void UpdateDependencies(string currCell)
         {
+            _cellForDependencies = currCell;
             if (Database[currCell].CellDepends.Count != 0)
             {
                 foreach (var cellDepends in Database[currCell].CellDepends)
@@ -91,26 +82,58 @@ namespace LabEx
             }
 
         }
-        public static void RefreshCells(string currCell)
+
+        //We recurrently update the cells that depend on the entered one.
+        public static void RefreshCells(string currCell, DataGridView dataGridViewEx)
         {
             foreach (string item in Database[currCell].DependentCells)
             {
                 int currColumn = Database[item].ColumnNumber;
                 int currRow = Database[item].RowNumber;
-                DataGridViewEx.CurrentCell = DataGridViewEx[currColumn, currRow];
+                dataGridViewEx.CurrentCell = dataGridViewEx[currColumn, currRow];
                 UpdateDependencies(item);
                 Database[item].CellValue = Calculator.Evaluate(Database[item].Expression);
-                DataGridViewEx[currColumn, currRow].Value = Database[item].CellValue.ToString();
-                RefreshCells(item);
+                if (Database[item].CellValue.ToString() == "∞")
+                {
+                    dataGridViewEx[currColumn, currRow].Value = "#DIV/0!";
+                }
+                else
+                {
+                    dataGridViewEx[currColumn, currRow].Value = Database[item].CellValue.ToString();
+                }
+                RefreshCells(item, dataGridViewEx);
                 break;
             }
         }
 
-        public static void AddRow()
+        //We just clear the table and then the entire dictionary. Only A0 remains.
+        public static void ClearTable(DataGridView dataGridViewEx)
+        {
+            foreach (var dependencies in Database.Values)
+            {
+                dependencies.DependentCells.Clear();
+                dependencies.CellDepends.Clear();
+                dataGridViewEx[dependencies.ColumnNumber, dependencies.RowNumber].Value = null;
+            }
+            int currColumnsCount = Columns - 1;
+            for (int i = 0; i < currColumnsCount; i++)
+            {
+                DelColumn(dataGridViewEx.Columns.Count - 1, dataGridViewEx);
+            }
+            int currRowsCount = Rows - 1;
+            for (int j = 0; j < currRowsCount; j++)
+            {
+                DelRow(dataGridViewEx.Rows.Count - 1, dataGridViewEx);
+            }
+            Database.Clear();
+            Cell cell = new(0, 0);
+            Database.Add(cell.Name, cell);
+        }
+        public static void AddRow(DataGridView dataGridViewEx)
         {
             DataGridViewRow defRow = new();
             defRow.HeaderCell.Value = Rows.ToString();
-            DataGridViewEx.Rows.Add(defRow);
+            dataGridViewEx.Rows.Add(defRow);
             ++Rows;
 
             for (int i = 0; i < Columns; i++)
@@ -119,13 +142,13 @@ namespace LabEx
                 Database.Add(cell.Name, cell);
             }
         }
-        public static void AddColumn()
+        public static void AddColumn(DataGridView dataGridViewEx)
         {
             DataGridViewColumn defColumn = new();
             defColumn.HeaderText = Converter.To26System(Columns);
             defColumn.Name = defColumn.HeaderText;
             defColumn.CellTemplate = new Cell();
-            DataGridViewEx.Columns.Add(defColumn);
+            dataGridViewEx.Columns.Add(defColumn);
             ++Columns;
 
             for (int j = 0; j < Rows; j++)
@@ -134,44 +157,24 @@ namespace LabEx
                 Database.Add(cell.Name, cell);
             }
         }
-        public static void DelRow()
-        {
-            int currRow = Rows - 1;
-            for (int i = 0; i < Columns; i++)
-            {
-                if (Database[Cell.BuildNameCell(i, currRow)].DependentCells.Count != 0 ||
-                    DataGridViewEx[i, currRow].Value != null)
-                {
-                     DialogResult result = MessageBox.Show(
-                        "Some cells have dependent cells or data. Are you sure you want to delete the line?",
-                        "WARNING!",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Warning,
-                        MessageBoxDefaultButton.Button1);
-                    if (result == DialogResult.No)
-                    {
-                        return;
-                    }
-                    else if (result == DialogResult.Yes)
-                    {
-                        break;
-                    }
-                }
-            }
-            for (int i = 0; i < Columns; i++)
-            {
-                string currCell = Cell.BuildNameCell(i, currRow);
-                if (Database[currCell].DependentCells.Count != 0)
-                {
-                    DataGridViewEx.CurrentCell = DataGridViewEx[i, currRow];
-                    Database[currCell].CellValue = 0;
-                    RefreshCells(currCell);
 
-                    foreach (var dependentCell in Database[currCell].DependentCells)
+        //After checking for dependence, we remove cells from the table and the database one by one.
+        public static void DelColumn(int lastColumn, DataGridView dataGridViewEx)
+        {
+            for (int j = 0; j < Rows; j++)
+            {
+                string cellName = Cell.BuildCellName(lastColumn, j);
+                if (Database[cellName].DependentCells.Count != 0)
+                {
+                    dataGridViewEx.CurrentCell = dataGridViewEx[lastColumn, j];
+                    Database[cellName].CellValue = 0;
+                    RefreshCells(cellName, dataGridViewEx);
+
+                    foreach (var dependentCell in Database[cellName].DependentCells)
                     {
                         foreach (var cellDepends in Database[dependentCell].CellDepends)
                         {
-                            if (currCell == cellDepends)
+                            if (cellName == cellDepends)
                             {
                                 Database[dependentCell].CellDepends.Remove(cellDepends);
                             }
@@ -179,76 +182,165 @@ namespace LabEx
                         }
                     }
                 }
-                else if (Database[currCell].CellDepends.Count != 0)
+                else if (Database[cellName].CellDepends.Count != 0)
                 {
-                    UpdateDependencies(currCell);
+                    UpdateDependencies(cellName);
+                }
+            }
+            for (int j = 0; j < Rows; j++)
+            {
+                Database.Remove(Cell.BuildCellName(lastColumn, j));
+            }
+            dataGridViewEx.CurrentCell = dataGridViewEx[0, 0];
+            dataGridViewEx.Columns.RemoveAt(lastColumn);
+            --Columns;
+        }
+
+        //Just like columns.
+        public static void DelRow(int lastRow, DataGridView dataGridViewEx)
+        {
+            for (int i = 0; i < Columns; i++)
+            {
+                string cellName = Cell.BuildCellName(i, lastRow);
+                if (Database[cellName].DependentCells.Count != 0)
+                {
+                    dataGridViewEx.CurrentCell = dataGridViewEx[i, lastRow];
+                    Database[cellName].CellValue = 0;
+                    RefreshCells(cellName, dataGridViewEx);
+
+                    foreach (var dependentCell in Database[cellName].DependentCells)
+                    {
+                        foreach (var cellDepends in Database[dependentCell].CellDepends)
+                        {
+                            if (cellName == cellDepends)
+                            {
+                                Database[dependentCell].CellDepends.Remove(cellDepends);
+                            }
+                            break;
+                        }
+                    }
+                }
+                else if (Database[cellName].CellDepends.Count != 0)
+                {
+                    UpdateDependencies(cellName);
                 }
             }
             for (int i = 0; i < Columns; i++)
             {
-                Database.Remove(Cell.BuildNameCell(i, currRow));
+                Database.Remove(Cell.BuildCellName(i, lastRow));
             }
-            DataGridViewEx.CurrentCell = DataGridViewEx[0, 0];
-            DataGridViewEx.Rows.RemoveAt(currRow);
+            dataGridViewEx.CurrentCell = dataGridViewEx[0, 0];
+            dataGridViewEx.Rows.RemoveAt(lastRow);
             --Rows;
         }
-        public static void DelColumn()
+
+        //Recursive check for recursion)
+        public static bool ReccurenceCheck(Cell currCell, Cell exprCell)
         {
-            int currColumn = Columns - 1;
-            for (int j = 0; j < Rows; j++)
+            if (currCell.CellDepends.Contains(exprCell.Name))
             {
-                if (Database[Cell.BuildNameCell(currColumn, j)].DependentCells.Count != 0 ||
-                    DataGridViewEx[currColumn, j].Value != null)
+                return true;
+            }
+            foreach (var prevCell in currCell.CellDepends)
+            {
+                if (ReccurenceCheck(Database[prevCell], exprCell))
                 {
-                    DialogResult result = MessageBox.Show(
-                       "Some cells have dependent cells or data. Are you sure you want to delete the line?",
-                       "WARNING!",
-                       MessageBoxButtons.YesNo,
-                       MessageBoxIcon.Warning,
-                       MessageBoxDefaultButton.Button1);
-                    if (result == DialogResult.No)
-                    {
-                        return;
-                    }
-                    else if (result == DialogResult.Yes)
-                    {
-                        break;
-                    }
+                    return true;
                 }
             }
-            for (int j = 0; j < Rows; j++)
-            {
-                string currCell = Cell.BuildNameCell(currColumn, j);
-                if (Database[currCell].DependentCells.Count != 0)
-                {
-                    DataGridViewEx.CurrentCell = DataGridViewEx[currColumn, j];
-                    Database[currCell].CellValue = 0;
-                    RefreshCells(currCell);
+            return false;
+        }
 
-                    foreach (var dependentCell in Database[currCell].DependentCells)
+        //Adds dependencies when using cells in an expression. Closely related to LabExVisitor
+        public static void AddDependencies(string result, Cell cell)
+        {
+            if (result == _cellForDependencies || ReccurenceCheck(cell, Database[_cellForDependencies]))
+            {
+                throw new StackOverflowException();
+            }
+            Database[_cellForDependencies].CellDepends.Add(cell.Name);
+            cell.DependentCells.Add(_cellForDependencies);
+        }
+        public static void Save(System.IO.StreamWriter sw)
+        {
+            sw.WriteLine(Columns);
+            sw.WriteLine(Rows);
+            for (int i = 0; i < Columns; i++)
+            {
+                for (int j = 0; j < Rows; j++)
+                {
+                    Cell cell = Database[Cell.BuildCellName(i, j)];
+                    sw.WriteLine(cell.Name);
+                    sw.WriteLine(cell.Expression);
+                    sw.WriteLine(cell.CellValue);
+
+                    if (cell.CellDepends.Count == 0)
                     {
-                        foreach (var cellDepends in Database[dependentCell].CellDepends)
+                        sw.WriteLine("0");
+                    }
+                    else
+                    {
+                        sw.WriteLine(cell.CellDepends.Count);
+                        foreach (string cellDepends in cell.CellDepends)
                         {
-                            if (currCell == cellDepends)
-                            {
-                                Database[dependentCell].CellDepends.Remove(cellDepends);
-                            }
-                            break;
+                            sw.WriteLine(cellDepends);
+                        }
+                    }
+                    if (cell.DependentCells.Count == 0)
+                    {
+                        sw.WriteLine("0");
+                    }
+                    else
+                    {
+                        sw.WriteLine(cell.DependentCells.Count);
+                        foreach (string dependentCells in cell.DependentCells)
+                        {
+                            sw.WriteLine(dependentCells);
                         }
                     }
                 }
-                else if (Database[currCell].CellDepends.Count != 0)
+            }
+        }
+        public static void Open(int columns, int rows, System.IO.StreamReader sr, DataGridView dataGridView)
+        {
+            for (int i = 0; i < columns - 1; i++)
+            {
+                AddColumn(dataGridView);
+            }
+            for (int j = 0; j < rows - 1; j++)
+            {
+                AddRow(dataGridView);
+            }
+            for (int i = 0; i < columns; i++)
+            {
+                for (int j = 0; j < rows; j++)
                 {
-                    UpdateDependencies(currCell);
+                    string name = sr.ReadLine();
+                    string expression = sr.ReadLine();
+                    string value = sr.ReadLine();
+
+                    if (expression != "")
+                    {
+                        Database[name].Expression = expression;
+                        Database[name].CellValue = double.Parse(value);
+                        dataGridView[i, j].Value = value;
+                    }
+
+                    int cellDependsCount = int.Parse(sr.ReadLine());
+
+                    for (int k = 0; k < cellDependsCount; k++)
+                    {
+                        Database[name].CellDepends.Add(sr.ReadLine());
+                    }
+
+                    int dependentCellsCount = int.Parse(sr.ReadLine());
+
+                    for (int h = 0; h < dependentCellsCount; h++)
+                    {
+                        Database[name].DependentCells.Add(sr.ReadLine());
+                    }
                 }
             }
-            for (int j = 0; j < Rows; j++)
-            {
-                Database.Remove(Cell.BuildNameCell(currColumn, j));
-            }
-            DataGridViewEx.CurrentCell = DataGridViewEx[0, 0];
-            DataGridViewEx.Columns.RemoveAt(currColumn);
-            --Columns;
         }
     }
 }

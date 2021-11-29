@@ -1,16 +1,12 @@
 ﻿using Antlr4.Runtime.Misc;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace LabEx
 {
     class LabExVisitor : LabExBaseVisitor<double>
     {
-
         public override double VisitCompileUnit(LabExParser.CompileUnitContext context)
         {
             return Visit(context.expression());
@@ -67,6 +63,7 @@ namespace LabEx
                 return number - 1;
             }
         }
+
         //IdentifierExpr
         public override double VisitIdentifierExpr(LabExParser.IdentifierExprContext context)
         {
@@ -74,12 +71,8 @@ namespace LabEx
             //Extract the value of the variable from the table
             if (Table.Database.TryGetValue(result.ToString(), out Cell cell))
             {
-                //**************************
-                //Set cell dependencies
-                string currCell = Table.CurrCell();
-                Table.Database[currCell].CellDepends.Add(cell.Name);
-                cell.DependentCells.Add(currCell);
-                //**************************
+                //Сalling recursive check for recursion and set cell dependencies
+                Table.AddDependencies(result, cell);
                 return cell.CellValue;
             }
             else
@@ -93,6 +86,7 @@ namespace LabEx
             return Visit(context.expression());
         }
 
+        //ExponentialExpr
         public override double VisitExponentialExpr(LabExParser.ExponentialExprContext context)
         {
             var left = WalkLeft(context);
@@ -102,6 +96,7 @@ namespace LabEx
             return Math.Pow(left, right);
         }
 
+        //AdditiveExpr
         public override double VisitAdditiveExpr(LabExParser.AdditiveExprContext context)
         {
             var left = WalkLeft(context);
@@ -119,6 +114,7 @@ namespace LabEx
             }
         }
 
+        //MultiplicativeExpr
         public override double VisitMultiplicativeExpr(LabExParser.MultiplicativeExprContext context)
         {
             var left = WalkLeft(context);

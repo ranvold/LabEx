@@ -60,21 +60,23 @@ namespace LabEx
             // 
             // ButtonSave
             // 
-            this.ButtonSave.Location = new System.Drawing.Point(93, 7);
+            this.ButtonSave.Location = new System.Drawing.Point(12, 7);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(75, 28);
             this.ButtonSave.TabIndex = 1;
             this.ButtonSave.Text = "Save";
             this.ButtonSave.UseVisualStyleBackColor = true;
+            this.ButtonSave.Click += new System.EventHandler(this.ButtonSave_Click);
             // 
             // ButtonOpen
             // 
-            this.ButtonOpen.Location = new System.Drawing.Point(12, 7);
+            this.ButtonOpen.Location = new System.Drawing.Point(93, 7);
             this.ButtonOpen.Name = "ButtonOpen";
             this.ButtonOpen.Size = new System.Drawing.Size(75, 28);
             this.ButtonOpen.TabIndex = 2;
             this.ButtonOpen.Text = "Open";
             this.ButtonOpen.UseVisualStyleBackColor = true;
+            this.ButtonOpen.Click += new System.EventHandler(this.ButtonOpen_Click);
             // 
             // LabelRows
             // 
@@ -173,7 +175,7 @@ namespace LabEx
             this.Name = "FormEx";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LabEx";
-            this.Load += new System.EventHandler(this.FormEx_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormEx_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEx)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
