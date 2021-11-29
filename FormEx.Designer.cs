@@ -41,7 +41,12 @@ namespace LabEx
             this.ButtonDelColumn = new System.Windows.Forms.Button();
             this.TextBoxExpression = new System.Windows.Forms.TextBox();
             this.ButtonEnterExp = new System.Windows.Forms.Button();
+            this.SplitContainerEx = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEx)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SplitContainerEx)).BeginInit();
+            this.SplitContainerEx.Panel1.SuspendLayout();
+            this.SplitContainerEx.Panel2.SuspendLayout();
+            this.SplitContainerEx.SuspendLayout();
             this.SuspendLayout();
             // 
             // DataGridViewEx
@@ -50,18 +55,20 @@ namespace LabEx
             this.DataGridViewEx.AllowUserToDeleteRows = false;
             this.DataGridViewEx.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
             this.DataGridViewEx.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataGridViewEx.Location = new System.Drawing.Point(-3, 41);
+            this.DataGridViewEx.Cursor = System.Windows.Forms.Cursors.Default;
+            this.DataGridViewEx.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DataGridViewEx.Location = new System.Drawing.Point(0, 0);
             this.DataGridViewEx.Name = "DataGridViewEx";
             this.DataGridViewEx.ReadOnly = true;
             this.DataGridViewEx.RowHeadersWidth = 60;
             this.DataGridViewEx.RowTemplate.Height = 25;
-            this.DataGridViewEx.Size = new System.Drawing.Size(843, 411);
+            this.DataGridViewEx.Size = new System.Drawing.Size(838, 391);
             this.DataGridViewEx.TabIndex = 0;
             this.DataGridViewEx.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewEx_CellEnter);
             // 
             // ButtonSave
             // 
-            this.ButtonSave.Location = new System.Drawing.Point(12, 7);
+            this.ButtonSave.Location = new System.Drawing.Point(10, 12);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(75, 28);
             this.ButtonSave.TabIndex = 1;
@@ -71,7 +78,7 @@ namespace LabEx
             // 
             // ButtonOpen
             // 
-            this.ButtonOpen.Location = new System.Drawing.Point(93, 7);
+            this.ButtonOpen.Location = new System.Drawing.Point(91, 12);
             this.ButtonOpen.Name = "ButtonOpen";
             this.ButtonOpen.Size = new System.Drawing.Size(75, 28);
             this.ButtonOpen.TabIndex = 2;
@@ -82,7 +89,7 @@ namespace LabEx
             // LabelRows
             // 
             this.LabelRows.AutoSize = true;
-            this.LabelRows.Location = new System.Drawing.Point(217, 14);
+            this.LabelRows.Location = new System.Drawing.Point(215, 19);
             this.LabelRows.Name = "LabelRows";
             this.LabelRows.Size = new System.Drawing.Size(35, 15);
             this.LabelRows.TabIndex = 3;
@@ -90,7 +97,7 @@ namespace LabEx
             // 
             // ButtonAddRow
             // 
-            this.ButtonAddRow.Location = new System.Drawing.Point(258, 7);
+            this.ButtonAddRow.Location = new System.Drawing.Point(256, 12);
             this.ButtonAddRow.Name = "ButtonAddRow";
             this.ButtonAddRow.Size = new System.Drawing.Size(28, 28);
             this.ButtonAddRow.TabIndex = 4;
@@ -100,7 +107,7 @@ namespace LabEx
             // 
             // ButtonDelRow
             // 
-            this.ButtonDelRow.Location = new System.Drawing.Point(295, 7);
+            this.ButtonDelRow.Location = new System.Drawing.Point(293, 12);
             this.ButtonDelRow.Name = "ButtonDelRow";
             this.ButtonDelRow.Size = new System.Drawing.Size(28, 28);
             this.ButtonDelRow.TabIndex = 5;
@@ -111,7 +118,7 @@ namespace LabEx
             // LabelColumns
             // 
             this.LabelColumns.AutoSize = true;
-            this.LabelColumns.Location = new System.Drawing.Point(373, 14);
+            this.LabelColumns.Location = new System.Drawing.Point(371, 19);
             this.LabelColumns.Name = "LabelColumns";
             this.LabelColumns.Size = new System.Drawing.Size(55, 15);
             this.LabelColumns.TabIndex = 6;
@@ -119,7 +126,7 @@ namespace LabEx
             // 
             // ButtonAddColumn
             // 
-            this.ButtonAddColumn.Location = new System.Drawing.Point(434, 7);
+            this.ButtonAddColumn.Location = new System.Drawing.Point(432, 12);
             this.ButtonAddColumn.Name = "ButtonAddColumn";
             this.ButtonAddColumn.Size = new System.Drawing.Size(28, 28);
             this.ButtonAddColumn.TabIndex = 7;
@@ -129,7 +136,7 @@ namespace LabEx
             // 
             // ButtonDelColumn
             // 
-            this.ButtonDelColumn.Location = new System.Drawing.Point(471, 7);
+            this.ButtonDelColumn.Location = new System.Drawing.Point(469, 12);
             this.ButtonDelColumn.Name = "ButtonDelColumn";
             this.ButtonDelColumn.Size = new System.Drawing.Size(28, 28);
             this.ButtonDelColumn.TabIndex = 8;
@@ -139,7 +146,7 @@ namespace LabEx
             // 
             // TextBoxExpression
             // 
-            this.TextBoxExpression.Location = new System.Drawing.Point(542, 11);
+            this.TextBoxExpression.Location = new System.Drawing.Point(540, 16);
             this.TextBoxExpression.Name = "TextBoxExpression";
             this.TextBoxExpression.Size = new System.Drawing.Size(203, 23);
             this.TextBoxExpression.TabIndex = 9;
@@ -147,7 +154,7 @@ namespace LabEx
             // 
             // ButtonEnterExp
             // 
-            this.ButtonEnterExp.Location = new System.Drawing.Point(751, 7);
+            this.ButtonEnterExp.Location = new System.Drawing.Point(749, 12);
             this.ButtonEnterExp.Name = "ButtonEnterExp";
             this.ButtonEnterExp.Size = new System.Drawing.Size(75, 28);
             this.ButtonEnterExp.TabIndex = 10;
@@ -155,32 +162,57 @@ namespace LabEx
             this.ButtonEnterExp.UseVisualStyleBackColor = true;
             this.ButtonEnterExp.Click += new System.EventHandler(this.ButtonEnterExp_Click);
             // 
+            // SplitContainerEx
+            // 
+            this.SplitContainerEx.Cursor = System.Windows.Forms.Cursors.Default;
+            this.SplitContainerEx.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SplitContainerEx.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.SplitContainerEx.IsSplitterFixed = true;
+            this.SplitContainerEx.Location = new System.Drawing.Point(0, 0);
+            this.SplitContainerEx.Name = "SplitContainerEx";
+            this.SplitContainerEx.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // SplitContainerEx.Panel1
+            // 
+            this.SplitContainerEx.Panel1.Controls.Add(this.TextBoxExpression);
+            this.SplitContainerEx.Panel1.Controls.Add(this.ButtonEnterExp);
+            this.SplitContainerEx.Panel1.Controls.Add(this.ButtonSave);
+            this.SplitContainerEx.Panel1.Controls.Add(this.ButtonOpen);
+            this.SplitContainerEx.Panel1.Controls.Add(this.ButtonDelColumn);
+            this.SplitContainerEx.Panel1.Controls.Add(this.LabelRows);
+            this.SplitContainerEx.Panel1.Controls.Add(this.ButtonAddColumn);
+            this.SplitContainerEx.Panel1.Controls.Add(this.ButtonAddRow);
+            this.SplitContainerEx.Panel1.Controls.Add(this.LabelColumns);
+            this.SplitContainerEx.Panel1.Controls.Add(this.ButtonDelRow);
+            this.SplitContainerEx.Panel1.Cursor = System.Windows.Forms.Cursors.Default;
+            // 
+            // SplitContainerEx.Panel2
+            // 
+            this.SplitContainerEx.Panel2.Controls.Add(this.DataGridViewEx);
+            this.SplitContainerEx.Panel2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.SplitContainerEx.Size = new System.Drawing.Size(838, 441);
+            this.SplitContainerEx.SplitterDistance = 46;
+            this.SplitContainerEx.TabIndex = 11;
+            // 
             // FormEx
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(838, 450);
-            this.Controls.Add(this.ButtonEnterExp);
-            this.Controls.Add(this.TextBoxExpression);
-            this.Controls.Add(this.ButtonDelColumn);
-            this.Controls.Add(this.ButtonAddColumn);
-            this.Controls.Add(this.LabelColumns);
-            this.Controls.Add(this.ButtonDelRow);
-            this.Controls.Add(this.ButtonAddRow);
-            this.Controls.Add(this.LabelRows);
-            this.Controls.Add(this.ButtonOpen);
-            this.Controls.Add(this.ButtonSave);
-            this.Controls.Add(this.DataGridViewEx);
+            this.ClientSize = new System.Drawing.Size(838, 441);
+            this.Controls.Add(this.SplitContainerEx);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
             this.Name = "FormEx";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LabEx";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormEx_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEx)).EndInit();
+            this.SplitContainerEx.Panel1.ResumeLayout(false);
+            this.SplitContainerEx.Panel1.PerformLayout();
+            this.SplitContainerEx.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.SplitContainerEx)).EndInit();
+            this.SplitContainerEx.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -197,6 +229,7 @@ namespace LabEx
         private System.Windows.Forms.Button ButtonDelColumn;
         private System.Windows.Forms.TextBox TextBoxExpression;
         private System.Windows.Forms.Button ButtonEnterExp;
+        private System.Windows.Forms.SplitContainer SplitContainerEx;
     }
 }
 

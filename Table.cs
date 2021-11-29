@@ -11,8 +11,6 @@ namespace LabEx
         private static string _cellForDependencies;
         private static Dictionary<string, Cell> _database = new();
 
-
-
         public static Dictionary<string, Cell> Database
         {
             get { return _database; }
