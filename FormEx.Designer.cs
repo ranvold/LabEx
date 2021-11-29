@@ -29,6 +29,7 @@ namespace LabEx
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormEx));
             this.DataGridViewEx = new System.Windows.Forms.DataGridView();
             this.ButtonSave = new System.Windows.Forms.Button();
             this.ButtonOpen = new System.Windows.Forms.Button();
@@ -171,6 +172,7 @@ namespace LabEx
             this.Controls.Add(this.ButtonSave);
             this.Controls.Add(this.DataGridViewEx);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "FormEx";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

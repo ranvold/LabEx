@@ -41,6 +41,8 @@ namespace LabEx
                 if (Table.Database[currCell].DependentCells.Count != 0)
                 {
                     Table.RefreshCells(currCell, DataGridViewEx);
+
+                    DataGridViewEx.CurrentCell = DataGridViewEx[currColumn, currRow];
                 }
             }
             catch(StackOverflowException)
@@ -209,10 +211,11 @@ namespace LabEx
             }
             StreamReader sr = new(openFileDialog.FileName);
             Table.ClearTable(DataGridViewEx);
-            int.TryParse(sr.ReadLine(), out int columns);
-            int.TryParse(sr.ReadLine(), out int rows);
+            int columns = int.Parse(sr.ReadLine());
+            int rows = int.Parse(sr.ReadLine());
             Table.Open(columns, rows, sr, DataGridViewEx);
             sr.Close();
+            DataGridViewEx.Focus();
         }
 
         private void FormEx_FormClosing(object sender, FormClosingEventArgs e)
