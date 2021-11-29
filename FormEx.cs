@@ -193,7 +193,7 @@ namespace LabEx
             if (saveFileDialog.FileName != "")
             {
                 FileStream fs = (FileStream)saveFileDialog.OpenFile();
-                StreamWriter sw = new StreamWriter(fs);
+                StreamWriter sw = new(fs);
                 Table.Save(sw);
                 sw.Close();
                 fs.Close();
