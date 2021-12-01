@@ -2,7 +2,7 @@
 
 namespace LabEx
 {
-    class Calculator
+    public class Calculator
     {
         public static double Evaluate(string expression)
         {
