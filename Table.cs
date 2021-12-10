@@ -115,7 +115,7 @@ namespace LabEx
             }
         }
 
-        //When using cells in the expression, we update the dependencies.
+        //Before each evaluation of the expression, we remove the dependencies of the current cell.
         public static void UpdateDependencies(string currCell)
         {
             if (Database[currCell].CellDepends.Count != 0)
@@ -138,7 +138,8 @@ namespace LabEx
             _currCellForCheckRecursion = currCell;
         }
 
-        //Adds dependencies when using cells in an expression. Closely related to LabExVisitor.VisitIdentifierExpr
+        //Add dependencies to the current cell if others are used in the expression.
+        //Closely related to LabExVisitor.VisitIdentifierExpr
         public static void AddDependencies(string result, Cell cellInExpression)
         {
             /* First make sure the current cell does not create a stack overflow. */
