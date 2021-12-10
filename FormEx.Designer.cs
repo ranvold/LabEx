@@ -164,7 +164,7 @@ namespace LabEx
             // 
             // SplitContainerEx
             // 
-            this.SplitContainerEx.Cursor = System.Windows.Forms.Cursors.Default;
+            this.SplitContainerEx.Cursor = System.Windows.Forms.Cursors.HSplit;
             this.SplitContainerEx.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SplitContainerEx.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.SplitContainerEx.IsSplitterFixed = true;

@@ -14,60 +14,6 @@ namespace LabEx
             Table.InitTable(DefaultColumns, DefaultRows, DataGridViewEx);
         }
 
-
-        //The main program method for working with expressions.
-        private void CalcExprInBox()
-        {
-            int currColumn = DataGridViewEx.CurrentCell.ColumnIndex;
-            int currRow = DataGridViewEx.CurrentCell.RowIndex;
-            string currCell = Cell.BuildCellName(currColumn, currRow);
-            Table.UpdateDependencies(currCell);
-            try
-            {
-                Table.Database[currCell].CellValue = Calculator.Evaluate(TextBoxExpression.Text);
-                Table.Database[currCell].Expression = TextBoxExpression.Text;
-                if (Table.Database[currCell].CellValue.ToString() == "∞")
-                {
-                    DataGridViewEx[currColumn, currRow].Value = "#DIV/0!";
-                }
-                else if (TextBoxExpression.Text != "")
-                {
-                    DataGridViewEx[currColumn, currRow].Value = Table.Database[currCell].CellValue.ToString();
-                }
-                else
-                {
-                    DataGridViewEx[currColumn, currRow].Value = null;
-                }
-                if (Table.Database[currCell].DependentCells.Count != 0)
-                {
-                    Table.RefreshCells(currCell, DataGridViewEx);
-
-                    DataGridViewEx.CurrentCell = DataGridViewEx[currColumn, currRow];
-                }
-            }
-            catch(StackOverflowException)
-            {
-                MessageBox.Show(
-                    "Reccurence is present! Please try to enter a valid expression.",
-                    "WARNING!",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning,
-                    MessageBoxDefaultButton.Button1);
-            }
-            catch
-            {
-                MessageBox.Show(
-                    "Invalid expression entered, supported operations: " +
-                    "+, -, *, /, ^, inc, dec, nmax(x1, x2,..., xN), nmin(x1, x2,...xN)(N>=1). " +
-                    "And also rational numbers. " +
-                    "When introducing cells, use uppercase Latin letters, for example A0+B1.",
-                    "INFO",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information,
-                    MessageBoxDefaultButton.Button1);
-            }
-        }
-
         private void DataGridViewEx_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
             string currentCell = Cell.BuildCellName(e.ColumnIndex, e.RowIndex);
@@ -87,14 +33,14 @@ namespace LabEx
 
         private void ButtonEnterExp_Click(object sender, EventArgs e)
         {
-            CalcExprInBox();
+            Table.CalcExpression(DataGridViewEx, TextBoxExpression.Text);
         }
         
         private void TextBoxExpression_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                CalcExprInBox();
+                Table.CalcExpression(DataGridViewEx, TextBoxExpression.Text);
 
                 e.SuppressKeyPress = true;
                 e.Handled = true;

@@ -8,7 +8,7 @@ namespace LabEx
     {
         private static int _rows = 0;
         private static int _columns = 0;
-        private static string _cellForDependencies;
+        private static string _currCellForCheckRecursion;
         private static Dictionary<string, Cell> _database = new();
 
         public static Dictionary<string, Cell> Database
@@ -60,10 +60,64 @@ namespace LabEx
             }
         }
 
+        //The main program method for working with expressions.
+        public static void CalcExpression(DataGridView dataGridViewEx, string expressionInBox)
+        {
+            int currColumn = dataGridViewEx.CurrentCell.ColumnIndex;
+            int currRow = dataGridViewEx.CurrentCell.RowIndex;
+            string currCell = Cell.BuildCellName(currColumn, currRow);
+
+            UpdateDependencies(currCell);
+
+            try
+            {
+                Database[currCell].CellValue = Calculator.Evaluate(expressionInBox);
+                Database[currCell].Expression = expressionInBox;
+                if (Database[currCell].CellValue.ToString() == "∞")
+                {
+                    dataGridViewEx[currColumn, currRow].Value = "#DIV/0!";
+                }
+                else if (expressionInBox != "")
+                {
+                    dataGridViewEx[currColumn, currRow].Value = Database[currCell].CellValue.ToString();
+                }
+                else
+                {
+                    dataGridViewEx[currColumn, currRow].Value = null;
+                }
+                if (Database[currCell].DependentCells.Count != 0)
+                {
+                    RefreshCells(currCell, dataGridViewEx);
+
+                    dataGridViewEx.CurrentCell = dataGridViewEx[currColumn, currRow];
+                }
+            }
+            catch (StackOverflowException)
+            {
+                MessageBox.Show(
+                    "Reccurence is present! Please try to enter a valid expression.",
+                    "WARNING!",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button1);
+            }
+            catch
+            {
+                MessageBox.Show(
+                    "Invalid expression entered, supported operations: " +
+                    "+, -, *, /, ^, inc, dec, nmax(x1, x2,..., xN), nmin(x1, x2,...xN)(N>=1). " +
+                    "And also rational numbers. " +
+                    "When introducing cells, use uppercase Latin letters, for example A0+B1.",
+                    "INFO",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1);
+            }
+        }
+
         //When using cells in the expression, we update the dependencies.
         public static void UpdateDependencies(string currCell)
         {
-            _cellForDependencies = currCell;
             if (Database[currCell].CellDepends.Count != 0)
             {
                 foreach (var cellDepends in Database[currCell].CellDepends)
@@ -73,13 +127,27 @@ namespace LabEx
                         if (dependentCells == currCell)
                         {
                             Database[cellDepends].DependentCells.Remove(currCell);
+                            break;
                         }
-                        break;
                     }
                 }
                 Database[currCell].CellDepends.Clear();
             }
 
+            /* For the subsequent check of the cells for the presence of recursion. */
+            _currCellForCheckRecursion = currCell;
+        }
+
+        //Adds dependencies when using cells in an expression. Closely related to LabExVisitor.VisitIdentifierExpr
+        public static void AddDependencies(string result, Cell cellInExpression)
+        {
+            /* First make sure the current cell does not create a stack overflow. */
+            if (result == _currCellForCheckRecursion || ReccurenceCheck(cellInExpression, Database[_currCellForCheckRecursion]))
+            {
+                throw new StackOverflowException();
+            }
+            Database[_currCellForCheckRecursion].CellDepends.Add(cellInExpression.Name);
+            cellInExpression.DependentCells.Add(_currCellForCheckRecursion);
         }
 
         //We recurrently update the cells that depend on the entered one.
@@ -91,6 +159,7 @@ namespace LabEx
                 int currRow = Database[item].RowNumber;
                 dataGridViewEx.CurrentCell = dataGridViewEx[currColumn, currRow];
                 UpdateDependencies(item);
+
                 Database[item].CellValue = Calculator.Evaluate(Database[item].Expression);
                 if (Database[item].CellValue.ToString() == "∞")
                 {
@@ -176,8 +245,8 @@ namespace LabEx
                             if (cellName == cellDepends)
                             {
                                 Database[dependentCell].CellDepends.Remove(cellDepends);
+                                break;
                             }
-                            break;
                         }
                     }
                 }
@@ -214,8 +283,8 @@ namespace LabEx
                             if (cellName == cellDepends)
                             {
                                 Database[dependentCell].CellDepends.Remove(cellDepends);
+                                break;
                             }
-                            break;
                         }
                     }
                 }
@@ -234,15 +303,15 @@ namespace LabEx
         }
 
         //Recursive check for recursion)
-        public static bool ReccurenceCheck(Cell currCell, Cell exprCell)
+        public static bool ReccurenceCheck(Cell cellInExpression, Cell currCellFromGrid)
         {
-            if (currCell.CellDepends.Contains(exprCell.Name))
+            if (cellInExpression.CellDepends.Contains(currCellFromGrid.Name))
             {
                 return true;
             }
-            foreach (var prevCell in currCell.CellDepends)
+            foreach (var prevCell in cellInExpression.CellDepends)
             {
-                if (ReccurenceCheck(Database[prevCell], exprCell))
+                if (ReccurenceCheck(Database[prevCell], currCellFromGrid))
                 {
                     return true;
                 }
@@ -250,16 +319,6 @@ namespace LabEx
             return false;
         }
 
-        //Adds dependencies when using cells in an expression. Closely related to LabExVisitor
-        public static void AddDependencies(string result, Cell cell)
-        {
-            if (result == _cellForDependencies || ReccurenceCheck(cell, Database[_cellForDependencies]))
-            {
-                throw new StackOverflowException();
-            }
-            Database[_cellForDependencies].CellDepends.Add(cell.Name);
-            cell.DependentCells.Add(_cellForDependencies);
-        }
         public static void Save(System.IO.StreamWriter sw)
         {
             sw.WriteLine(Columns);
