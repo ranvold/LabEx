@@ -67,7 +67,7 @@ namespace LabEx
             int currRow = dataGridViewEx.CurrentCell.RowIndex;
             string currCell = Cell.BuildCellName(currColumn, currRow);
 
-            UpdateDependencies(currCell);
+            RemoveDependencies(currCell);
 
             try
             {
@@ -116,7 +116,7 @@ namespace LabEx
         }
 
         //Before each evaluation of the expression, we remove the dependencies of the current cell.
-        public static void UpdateDependencies(string currCell)
+        public static void RemoveDependencies(string currCell)
         {
             if (Database[currCell].CellDepends.Count != 0)
             {
@@ -159,7 +159,7 @@ namespace LabEx
                 int currColumn = Database[item].ColumnNumber;
                 int currRow = Database[item].RowNumber;
                 dataGridViewEx.CurrentCell = dataGridViewEx[currColumn, currRow];
-                UpdateDependencies(item);
+                RemoveDependencies(item);
 
                 Database[item].CellValue = Calculator.Evaluate(Database[item].Expression);
                 if (Database[item].CellValue.ToString() == "∞")
@@ -253,7 +253,7 @@ namespace LabEx
                 }
                 else if (Database[cellName].CellDepends.Count != 0)
                 {
-                    UpdateDependencies(cellName);
+                    RemoveDependencies(cellName);
                 }
             }
             for (int j = 0; j < Rows; j++)
@@ -291,7 +291,7 @@ namespace LabEx
                 }
                 else if (Database[cellName].CellDepends.Count != 0)
                 {
-                    UpdateDependencies(cellName);
+                    RemoveDependencies(cellName);
                 }
             }
             for (int i = 0; i < Columns; i++)
