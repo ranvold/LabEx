@@ -70,7 +70,7 @@ namespace LabEx
                     DataGridViewEx[lastColumn, j].Value != null)
                 {
                     DialogResult result = MessageBox.Show(
-                       "Some cells have dependent cells or data. Are you sure you want to delete the line?",
+                       "Some cells in a column have dependent cells or data. Are you sure you want to delete the line?",
                        "WARNING!",
                        MessageBoxButtons.YesNo,
                        MessageBoxIcon.Warning,
@@ -111,7 +111,7 @@ namespace LabEx
                     DataGridViewEx[i, lastRow].Value != null)
                 {
                     DialogResult result = MessageBox.Show(
-                       "Some cells have dependent cells or data. Are you sure you want to delete the line?",
+                       "Some cells in a row have dependent cells or data. Are you sure you want to delete the line?",
                        "WARNING!",
                        MessageBoxButtons.YesNo,
                        MessageBoxIcon.Warning,
